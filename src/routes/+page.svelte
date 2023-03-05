@@ -1,7 +1,6 @@
 <script>
     import Question from "./components/quiz/Question.svelte";
     import Answer from "./components/quiz/Answer.svelte";
-    import Points from "./components/quiz/Points.svelte";
     import { onDestroy, onMount } from "svelte";
     import { onSnapshot } from "firebase/firestore";
     import { colRef } from "./lib/firebase.js";

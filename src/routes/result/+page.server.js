@@ -1,15 +1,23 @@
-
-import { redirect } from '@sveltejs/kit';
-
 export async function load({ fetch, params, locals }) {
+    let response = "";
 
-    let response = await fetch(`https://api.giphy.com/v1/gifs/random?api_key=${import.meta.env.VITE_GIPHY_API_KEY}&tag=congratulationss&rating=g`)
+    try {
+        response = await fetch(`https://api.giphy.com/v1/gifs/random?api_key=${import.meta.env.VITE_GIPHY_API_KEY}&tag=congratulationss&rating=g`)
+    } catch (err) {
+        return {
+            gif: ""
+        };
+    }
 
     try {
         response = await response.json()
+
     } catch (err) {
-        response = "";
+        return {
+            gif: ""
+        };
     }
+
     return {
         gif: response
     };
