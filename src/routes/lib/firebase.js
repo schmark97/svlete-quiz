@@ -5,8 +5,7 @@
 
 // Your web app's Firebase configuration
 import { initializeApp } from "firebase/app";
-import { getAuth, setPersistence, inMemoryPersistence } from "firebase/auth"
-
+import { getFirestore, collection } from "firebase/firestore";
 
 export const firebaseConfig = {
     apiKey: import.meta.env.VITE_API_KEY,
@@ -17,7 +16,10 @@ export const firebaseConfig = {
     appId: import.meta.env.VITE_appId,
 };
 
-
 const app = initializeApp(firebaseConfig);
+const db = getFirestore();
 
-export const auth = getAuth(app);
+export const colRef = collection(db, "quiz");
+
+
+

@@ -1,24 +1,72 @@
 <script>
-    import Quiz from "./quiz/Quiz.svelte";
-    import { authStore } from "./stores/authStore";
-    import { onMount } from "svelte";
-    import { auth } from "./lib/firebase";
-    import Auth from "./auth/Auth.svelte";
+    import Question from "./components/quiz/Question.svelte";
+    import Answer from "./components/quiz/Answer.svelte";
+    import Points from "./components/quiz/Points.svelte";
+    import { onDestroy, onMount } from "svelte";
+    import { onSnapshot } from "firebase/firestore";
+    import { colRef } from "./lib/firebase.js";
+    import { goto } from "$app/navigation";
+    import { quizStore } from "./stores/quizstore";
+
+    let currentQuestion = 0;
+    let quiz = [];
+
+    $: selectedAnswer =
+        currentQuestion < quiz.length ? quiz[currentQuestion].answers[0] : "";
+
+    const unsubscribe = onSnapshot(colRef, (querySnapshot) => {
+        querySnapshot.forEach((doc) => {
+            quiz = [doc.data(), ...quiz];
+        });
+
+        $quizStore.max = quiz.length;
+    });
 
     onMount(() => {
-        const unsubscribe = auth.onAuthStateChanged((user) => {
-            authStore.update((curr) => {
-                return { ...curr, isLoading: false, currentUser: user };
-            });
-        });
+        $quizStore.score = 0;
+        $quizStore.max = 0;
     });
+
+    onDestroy(() => {
+        if (unsubscribe) unsubscribe();
+    });
+
+    const handleSubmit = () => {
+        if (currentQuestion >= quiz.length) {
+            return;
+        }
+
+        const answers = quiz[currentQuestion].answers;
+
+        if (answers.indexOf(selectedAnswer) == quiz[currentQuestion].correct) {
+            $quizStore.score++;
+        }
+
+        currentQuestion++;
+
+        if (currentQuestion == quiz.length) {
+            goto("/result", { hello: "hello" });
+        }
+    };
+
+    function handleMessage(event) {
+        selectedAnswer = event.detail.answer;
+    }
 </script>
 
-{#if $authStore.currentUser}
-    <Quiz />
-{:else if !$authStore.isLoading}
-    <Auth />
-{/if}
+<main />
 
-<style>
-</style>
+{#if currentQuestion < quiz.length}
+    <Question questionText={quiz[currentQuestion].question} />
+    <Answer
+        answers={quiz[currentQuestion].answers}
+        questionIndex={currentQuestion}
+        selectedAnswer={quiz[currentQuestion].answers[0]}
+        on:select={handleMessage}
+    />
+    <div class="mt-5">
+        <button class="btn btn-primary btn-wide" on:click={handleSubmit}
+            >Submit</button
+        >
+    </div>
+{/if}
