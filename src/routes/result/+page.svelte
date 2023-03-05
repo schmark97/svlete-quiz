@@ -12,15 +12,20 @@
 
 <div class="flex h-screen">
     <div class="ml-auto mr-auto">
-        {#if $quizStore.max !== 0}
+        {#if $quizStore.max !== 0 && $quizStore.started}
             <div class="mb-5">
-                <img
-                    src="https://media2.giphy.com/media/3o6fJ1BM7R2EBRDnxK/giphy.gif?cid=2477cdf64989c27587c96e70304482bc34d3782120fd1bc6&rid=giphy.gif&ct=g"
-                    alt="congratulations"
-                />
+                <img src={gifUrl} alt="congratulations" />
             </div>
 
-            <Points points={$quizStore.score} max={$quizStore.max} />
+            <div class="mb-5">
+                <Points points={$quizStore.score} max={$quizStore.max} />
+            </div>
+
+            <div class="text-center">
+                <a href="/" class="btn-outline btn-info btn btn-wide"
+                    >Try again</a
+                >
+            </div>
         {:else}
             <a href="/" class="btn-outline btn-info btn btn-wide">Start quiz</a>
         {/if}

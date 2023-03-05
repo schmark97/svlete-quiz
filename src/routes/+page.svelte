@@ -36,6 +36,8 @@
             return;
         }
 
+        $quizStore.started = true;
+
         const answers = quiz[currentQuestion].answers;
 
         if (answers.indexOf(selectedAnswer) == quiz[currentQuestion].correct) {
@@ -45,7 +47,7 @@
         currentQuestion++;
 
         if (currentQuestion == quiz.length) {
-            goto("/result", { hello: "hello" });
+            goto("/result");
         }
     };
 
@@ -57,7 +59,10 @@
 <main />
 
 {#if currentQuestion < quiz.length}
-    <Question questionText={quiz[currentQuestion].question} />
+    <Question
+        code={quiz[currentQuestion].code}
+        questionText={quiz[currentQuestion].question}
+    />
     <Answer
         answers={quiz[currentQuestion].answers}
         questionIndex={currentQuestion}
