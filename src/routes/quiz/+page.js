@@ -9,7 +9,6 @@ export async function load({ fetch, params, locals }) {
         quiz = [doc.data(), ...quiz];
     });
 
-
     return {
         quiz
     };

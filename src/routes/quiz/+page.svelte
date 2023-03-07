@@ -4,7 +4,6 @@
     import { onMount } from "svelte";
     import { goto } from "$app/navigation";
     import { quizStore } from "../stores/quizstore";
-    import { space } from "svelte/internal";
 
     let currentQuestion = 0;
     export let data;
@@ -38,11 +37,21 @@
         currentQuestion++;
 
         if (currentQuestion == quiz.length) {
-            goto("/result");
+            let percentage = 0;
+            const max = $quizStore.max;
+            const points = $quizStore.score;
+
+            if (points !== 0 && max !== 0) {
+                percentage = points / max;
+            }
+
+            const param = percentage > 0.8 ? "c" : percentage > 0.5 ? "n" : "t";
+
+            goto(`/result?g=${param}`);
         }
     };
 
-    function handleMessage(event) {
+    function handleSelect(event) {
         selectedAnswer = event.detail.answer;
     }
 </script>
@@ -89,7 +98,7 @@
         answers={quiz[currentQuestion].answers}
         questionIndex={currentQuestion}
         selectedAnswer={quiz[currentQuestion].answers[0]}
-        on:select={handleMessage}
+        on:select={handleSelect}
     />
     <div class="mt-5">
         <button class="btn btn-primary btn-wide" on:click={handleSubmit}
