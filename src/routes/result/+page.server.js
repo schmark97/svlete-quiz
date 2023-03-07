@@ -11,7 +11,6 @@ export async function load({ fetch, params, locals }) {
 
     try {
         response = await response.json()
-
     } catch (err) {
         return {
             gif: ""

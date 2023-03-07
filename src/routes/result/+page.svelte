@@ -1,6 +1,7 @@
 <script>
     import { quizStore } from "../stores/quizstore";
     import Points from "../components/quiz/Points.svelte";
+    import { onDestroy } from "svelte";
 
     export let data;
     let gifUrl = "";
@@ -8,6 +9,10 @@
     if (data.gif.data) {
         gifUrl = data.gif.data.images.original.url;
     }
+
+    onDestroy(() => {
+        $quizStore.started = false;
+    });
 </script>
 
 <div class="flex h-screen">

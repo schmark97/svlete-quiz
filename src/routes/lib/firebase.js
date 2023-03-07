@@ -17,9 +17,9 @@ export const firebaseConfig = {
 };
 
 const app = initializeApp(firebaseConfig);
-const db = getFirestore();
+export const db = getFirestore();
 
-export const colRef = collection(db, "quiz");
+
 
 
 
