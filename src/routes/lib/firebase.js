@@ -5,7 +5,8 @@
 
 // Your web app's Firebase configuration
 import { initializeApp } from "firebase/app";
-import { getFirestore, collection } from "firebase/firestore";
+import { getFirestore } from "firebase/firestore";
+import { getAuth } from "firebase/auth"
 
 export const firebaseConfig = {
     apiKey: import.meta.env.VITE_API_KEY,
@@ -17,8 +18,9 @@ export const firebaseConfig = {
 };
 
 const app = initializeApp(firebaseConfig);
-export const db = getFirestore();
 
+export const db = getFirestore();
+export const auth = getAuth(app);
 
 
 
