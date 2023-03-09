@@ -4,10 +4,11 @@
     import { onMount } from "svelte";
     import { goto } from "$app/navigation";
     import { quizStore } from "../stores/quizstore";
+    import { db, auth } from "../lib/firebase.js";
+    import { doc, updateDoc, getDoc } from "firebase/firestore";
 
-    let currentQuestion = 0;
     export let data;
-
+    let currentQuestion = 0;
     let quiz =
         $quizStore.topic === "mix"
             ? data.quiz
@@ -20,6 +21,42 @@
 
     $: selectedAnswer =
         currentQuestion < quiz.length ? quiz[currentQuestion].answers[0] : "";
+
+    const addUserData = async (percentage, topic) => {
+        const user = auth.currentUser;
+
+        if (!user) {
+            return;
+        }
+
+        let userData = false;
+
+        const docRef = doc(db, "users", user.uid);
+
+        try {
+            const docSnap = await getDoc(docRef);
+            userData = docSnap.data();
+        } catch (error) {
+            console.log(error);
+            return;
+        }
+
+        if (!userData) {
+            return;
+        }
+
+        userData.gamesPlayed[topic] += 1;
+        userData.averageScore[topic] =
+            userData.averageScore[topic] === 0
+                ? percentage
+                : (userData.averageScore[topic] + percentage) / 2;
+
+        try {
+            await updateDoc(docRef, userData);
+        } catch (err) {
+            console.log(err);
+        }
+    };
 
     const handleSubmit = () => {
         if (currentQuestion >= quiz.length) {
@@ -44,6 +81,8 @@
             if (points !== 0 && max !== 0) {
                 percentage = points / max;
             }
+
+            addUserData(percentage, $quizStore.topic);
 
             const param = percentage > 0.8 ? "c" : percentage > 0.5 ? "n" : "t";
 

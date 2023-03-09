@@ -3,9 +3,9 @@
 
     // $: !$authStore.isLoading ? console.log($authStore.currentUser.uid) : "";
 
-    export let data;
+    // export let data;
 
-    console.log(data);
+    // console.log(data);
 </script>
 
 <h1>Stats</h1>

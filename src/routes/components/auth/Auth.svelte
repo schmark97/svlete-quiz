@@ -36,7 +36,6 @@
             try {
                 await setDoc(docRef, {
                     gamesPlayed: { css: 0, js: 0, php: 0, wp: 0, mix: 0 },
-                    highScore: { css: 0, js: 0, php: 0, wp: 0, mix: 0 },
                     averageScore: { css: 0, js: 0, php: 0, wp: 0, mix: 0 },
                 });
             } catch (err) {
