@@ -57,7 +57,14 @@
 
         {#if !$authStore.isLoading && auth.currentUser}
             <li>
-                <a title="MyStats" href="/mystats" class="hover:bg-green-600">
+                <a
+                    title="MyStats"
+                    href="/mystats"
+                    c
+                    class={currentUrl === "/mystats"
+                        ? "bg-orange-500"
+                        : "hover:bg-green-600"}
+                >
                     <svg
                         xmlns="http://www.w3.org/2000/svg"
                         class="h-5 w-5"

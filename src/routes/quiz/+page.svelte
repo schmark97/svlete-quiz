@@ -46,10 +46,7 @@
         }
 
         userData.gamesPlayed[topic] += 1;
-        userData.averageScore[topic] =
-            userData.averageScore[topic] === 0
-                ? percentage
-                : (userData.averageScore[topic] + percentage) / 2;
+        userData.averageScore[topic] += percentage;
 
         try {
             await updateDoc(docRef, userData);
