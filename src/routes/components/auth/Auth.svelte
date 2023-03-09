@@ -1,6 +1,10 @@
 <script>
     import { authHandlers } from "../../stores/authstore";
     import { goto } from "$app/navigation";
+    import { db, auth } from "../../lib/firebase.js";
+
+    import { doc, setDoc } from "firebase/firestore";
+
     let register = false;
     let email = "";
     let password = "";
@@ -12,10 +16,38 @@
         if (!email || !password || (register && !confirmPassword)) {
             return;
         }
+
         if (register && password === confirmPassword) {
-            await authHandlers.signup(email, password);
+            try {
+                await authHandlers.signup(email, password);
+            } catch (err) {
+                console.log(err);
+            }
+
+            const user = auth.currentUser;
+
+            if (!user) {
+                console.log("Something went wrong");
+                return;
+            }
+
+            const docRef = doc(db, "users", user.uid);
+
+            try {
+                await setDoc(docRef, {
+                    gamesPlayed: { css: 0, js: 0, php: 0, wp: 0, mix: 0 },
+                    highScore: { css: 0, js: 0, php: 0, wp: 0, mix: 0 },
+                    averageScore: { css: 0, js: 0, php: 0, wp: 0, mix: 0 },
+                });
+            } catch (err) {
+                console.log(err);
+            }
         } else {
-            await authHandlers.login(email, password);
+            try {
+                await authHandlers.login(email, password);
+            } catch (err) {
+                console.log(err);
+            }
         }
 
         goto("/");

@@ -33,6 +33,7 @@
     <ul class="menu p-2 rounded-bo">
         <li>
             <a
+                title="Home"
                 class={currentUrl === "/"
                     ? "bg-orange-500"
                     : "hover:bg-green-600"}
@@ -56,7 +57,7 @@
 
         {#if !$authStore.isLoading && auth.currentUser}
             <li>
-                <a href="/mystats" class="hover:bg-green-600">
+                <a title="MyStats" href="/mystats" class="hover:bg-green-600">
                     <svg
                         xmlns="http://www.w3.org/2000/svg"
                         class="h-5 w-5"
@@ -74,7 +75,11 @@
             </li>
 
             <li>
-                <button on:click={handleLogout} class="hover:bg-green-600">
+                <button
+                    title="LogOut"
+                    on:click={handleLogout}
+                    class="hover:bg-green-600"
+                >
                     <svg
                         xmlns="http://www.w3.org/2000/svg"
                         xmlns:xlink="http://www.w3.org/1999/xlink"
@@ -120,6 +125,7 @@
         {:else}
             <li>
                 <a
+                    title="Login"
                     class={currentUrl === "/login"
                         ? "bg-orange-500"
                         : "hover:bg-green-600"}
